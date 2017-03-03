@@ -50,10 +50,17 @@ else:
         if str.isalpha(w):
             modif_word = replacer.replace(w)
             if modif_word and str.isalpha(modif_word):
-                filtered.append(lemmatizer.lemmatize(modif_word.lower()))
+                mw = modif_word.lower()
+                # Lemmatize as 'verb' and 'noun' and hold whichever that makes the word different
+                # (Need more investigation for adjectives and adverbs. Better to use the real POS of the word)
+                mwv = lemmatizer.lemmatize(mw, pos='v') # verb lemma
+                if mwv != mw:
+                    filtered.append(mwv)
+                else:
+                    filtered.append(lemmatizer.lemmatize(mw)) # noun lemma 
 
     # count words and sort according to their frequencies
-    sorted_words = sorted(Counter(filtered).items(), key=operator.itemgetter(1))
+    sorted_words = sorted(Counter(filtered).items(), key=operator.itemgetter(1), reverse=True)
 
     # save the word lists
     with open('word_list.csv','w') as f:
@@ -67,21 +74,17 @@ end = len(sorted_words)-1
 while start <= end:
     pos = int((start+end)/2)
     print('Do you know the meaning of "%s" (y,n)?' % sorted_words[pos][0])
-    if input()=='y':
+    if input()=='n':
         end = pos - 1
-        pos -= 1
+        pos -= 1 # position of the last word that you know
     else:
         start = pos + 1
 # pos: the position where the user does not knows its meaning and the meaning of the words after that
 
 total = len(sorted_words)
-knows = total-(pos+1)
+pos += 1
 print("************************RESULTS***********************")
-print("You approximately knows %d words out of %d (%%%.1f)" %(knows,total,knows*100/total))
+print("You approximately knows %d words out of %d (%%%.1f)" %(pos,total,pos*100/total))
 print("******************************************************")
 
 # We can give the separate lists of words that the user knows and does not know
-
-
-
-
