@@ -1,5 +1,5 @@
 # VocabLevel
-This is a simple but efficient method to approximately calculate the users' vocabulary level. 
+This is not a simple but efficient method to approximately calculate the users' vocabulary level. 
 
 ## How it works?
 It is based on the subtitles of the Friends series, although it can be easily extended to other corpuses. After some simple pre-processing steps, the unique words are sorted according to their frequencies. Then, a binary search approach is adopted to find the vocabulary level of the users. This approach is based on the following simple rules:
